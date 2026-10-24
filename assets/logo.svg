@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512">
+    <!-- Modern Dark Squircle Background -->
+    <rect width="108" height="108" rx="24" ry="24" fill="#000000"/>
+    
+    <!-- Dynamic Swipe Orbit Trail -->
+    <path d="M 24,70 C 31,80 43,86 56,86 C 73,86 86,73 86,56 C 86,47 82,39 76,33" 
+          fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+          
+    <!-- StarSwipe Iconic Star: Modern 4-point concave star -->
+    <path d="M 54,22 C 54,39.67 68.33,54 86,54 C 68.33,54 54,68.33 54,86 C 54,68.33 39.67,54 22,54 C 39.67,54 54,39.67 54,22 Z" 
+          fill="#FFFFFF"/>
+          
+    <!-- Accent Mini Sparkle -->
+    <path d="M 76,26 C 76,29.5 79.5,33 83,33 C 79.5,33 76,36.5 76,40 C 76,36.5 72.5,33 69,33 C 72.5,33 76,29.5 76,26 Z" 
+          fill="#FFFFFF"/>
+</svg>

@@ -1,7 +1,7 @@
 # 星滑相册 (StarSwipe)
 
 <p align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="96" height="96" alt="StarSwipe Logo" />
+  <img src="assets/logo.png" width="96" height="96" alt="StarSwipe Logo" />
 </p>
 
 <p align="center">
