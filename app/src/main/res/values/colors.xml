@@ -1,0 +1,11 @@
+<resources>
+    <color name="primary_neon_green">#00E676</color>
+    <color name="primary_lime_dark">#00B359</color>
+    <color name="background_light">#F8F9FA</color>
+    <color name="background_dark">#121417</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_card_dark">#1A1E23</color>
+    <color name="text_primary">#191C1E</color>
+    <color name="text_secondary">#74777F</color>
+    <color name="accent_red">#FF5252</color>
+</resources>

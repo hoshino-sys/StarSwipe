@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">星滑相册</string>
+    <string name="tab_organize">整理</string>
+    <string name="tab_similar">相似</string>
+    <string name="tab_footprint">足迹</string>
+    <string name="tab_albums">相簿</string>
+    <string name="tab_profile">我的</string>
+
+    <!-- Categories -->
+    <string name="category_photo">照片</string>
+    <string name="category_video">视频</string>
+    <string name="category_screen_record">录屏</string>
+    <string name="category_screenshot">截屏</string>
+    <string name="category_selfie">自拍</string>
+    <string name="category_live_photo">实况/动态</string>
+
+    <!-- Organize -->
+    <string name="undo">撤回</string>
+    <string name="keep">保留</string>
+    <string name="delete">待删除</string>
+    <string name="empty_organize_title">太棒了！已整理完毕</string>
+    <string name="empty_organize_subtitle">当前分类暂无更多待清理媒体</string>
+    <string name="settlement_title">本轮清理结算</string>
+    <string name="settlement_btn_format">删除 %1$d 项 · 释放 %2$s</string>
+
+    <!-- Similar -->
+    <string name="similar_filter_recent">最近</string>
+    <string name="similar_smart_clean">智能清理</string>
+    <string name="similar_best_tag">★ 最优</string>
+
+    <!-- Footprint -->
+    <string name="footprint_tab_city">城市足迹</string>
+    <string name="footprint_tab_on_this_day">往年今日</string>
+
+    <!-- Album -->
+    <string name="empty_albums_badge">空相簿 %1$d 个</string>
+    <string name="clean_empty_albums">一键清理空相簿</string>
+    <string name="create_album">新建相簿</string>
+
+    <!-- Profile -->
+    <string name="profile_cleaned_count">累计清理</string>
+    <string name="profile_released_space">累计释放</string>
+    <string name="profile_storage_usage">存储空间使用</string>
+</resources>

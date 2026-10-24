@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M0,0h108v108h-108z"/>
+    <!-- StarSwipe Iconic Star: Modern 4-point concave star -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 54,22 C 54,39.67 68.33,54 86,54 C 68.33,54 54,68.33 54,86 C 54,68.33 39.67,54 22,54 C 39.67,54 54,39.67 54,22 Z"/>
+    <!-- Dynamic Swipe Orbit Trail -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M 24,70 C 31,80 43,86 56,86 C 73,86 86,73 86,56 C 86,47 82,39 76,33"/>
+    <!-- Accent Mini Sparkle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 76,26 C 76,29.5 79.5,33 83,33 C 79.5,33 76,36.5 76,40 C 76,36.5 72.5,33 69,33 C 72.5,33 76,29.5 76,26 Z"/>
+</vector>
