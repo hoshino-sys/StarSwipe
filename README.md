@@ -103,7 +103,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yexing/StarSwipe.git
+git clone https://github.com/hoshino-sys/StarSwipe.git
 cd StarSwipe
 
 # 编译 Debug 源码
