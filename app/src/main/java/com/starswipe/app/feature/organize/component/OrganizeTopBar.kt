@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ScreenShare
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CameraAlt
@@ -37,15 +38,10 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.MotionPhotosOn
 import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.ScreenShare
 import androidx.compose.material.icons.filled.Smartphone
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.filled.Videocam
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
-import com.starswipe.app.core.designsystem.theme.AccentDeleteRed
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,9 +50,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,11 +58,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.starswipe.app.core.designsystem.component.bounceClick
+import com.starswipe.app.core.designsystem.theme.AccentDeleteRed
 import com.starswipe.app.core.designsystem.theme.DarkGreen
 import com.starswipe.app.core.designsystem.theme.NeonGreen
 import com.starswipe.app.core.designsystem.theme.PureWhite
@@ -90,6 +93,7 @@ fun OrganizeTopBar(
     modifier: Modifier = Modifier
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    var buttonHeightPx by remember { mutableIntStateOf(0) }
 
     val buttonScale by animateFloatAsState(
         targetValue = if (menuExpanded) 1.05f else 1.0f,
@@ -126,6 +130,9 @@ fun OrganizeTopBar(
             Box {
                 Row(
                     modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                            buttonHeightPx = coordinates.size.height
+                        }
                         .graphicsLayer {
                             scaleX = buttonScale
                             scaleY = buttonScale
@@ -169,6 +176,7 @@ fun OrganizeTopBar(
 
                 CategoryDropdownPopup(
                     menuExpanded = menuExpanded,
+                    anchorHeightPx = buttonHeightPx,
                     onDismissRequest = { menuExpanded = false },
                     selectedCategory = selectedCategory,
                     categoryCounts = categoryCounts,
@@ -315,6 +323,7 @@ fun OrganizeTopBar(
 @Composable
 private fun CategoryDropdownPopup(
     menuExpanded: Boolean,
+    anchorHeightPx: Int,
     onDismissRequest: () -> Unit,
     selectedCategory: MediaType,
     categoryCounts: Map<MediaType, Int>,
@@ -322,18 +331,27 @@ private fun CategoryDropdownPopup(
 ) {
     if (!menuExpanded) return
 
+    val density = LocalDensity.current
+    val verticalOffset = if (anchorHeightPx > 0) {
+        anchorHeightPx + with(density) { 6.dp.roundToPx() }
+    } else {
+        with(density) { 46.dp.roundToPx() }
+    }
+
     Popup(
+        alignment = Alignment.TopStart,
+        offset = IntOffset(x = 0, y = verticalOffset),
         onDismissRequest = onDismissRequest,
         properties = PopupProperties(focusable = true)
     ) {
         var isVisible by remember { mutableStateOf(false) }
         LaunchedEffect(Unit) { isVisible = true }
 
-        androidx.compose.animation.AnimatedVisibility(
+        AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(spring(stiffness = Spring.StiffnessMediumLow)) +
                     scaleIn(
-                        initialScale = 0.82f,
+                        initialScale = 0.85f,
                         transformOrigin = TransformOrigin(0f, 0f),
                         animationSpec = spring(
                             dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -348,14 +366,14 @@ private fun CategoryDropdownPopup(
                     ),
             exit = fadeOut(spring(stiffness = Spring.StiffnessMediumLow)) +
                     scaleOut(
-                        targetScale = 0.85f,
+                        targetScale = 0.88f,
                         transformOrigin = TransformOrigin(0f, 0f),
                         animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
                     ) +
                     shrinkVertically()
         ) {
             Surface(
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(18.dp),
                 color = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp,
                 shadowElevation = 18.dp,
@@ -363,60 +381,188 @@ private fun CategoryDropdownPopup(
                     1.dp,
                     MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                 ),
-                modifier = Modifier
-                    .width(230.dp)
-                    .padding(top = 8.dp)
+                modifier = Modifier.width(280.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(10.dp)
                 ) {
-                    MediaType.entries.forEach { category ->
-                        val count = categoryCounts[category] ?: 0
-                        val isSelected = category == selectedCategory
-                        val categoryIcon = when (category) {
-                            MediaType.ALL_IMAGES -> Icons.Default.PhotoLibrary
-                            MediaType.ALL_VIDEOS -> Icons.Default.VideoLibrary
-                            MediaType.PHOTO -> Icons.Default.CameraAlt
-                            MediaType.VIDEO -> Icons.Default.Videocam
-                            MediaType.LIVE_PHOTO -> Icons.Default.MotionPhotosOn
-                            MediaType.SCREENSHOT -> Icons.Default.Smartphone
-                            MediaType.SCREEN_RECORDING -> Icons.Default.ScreenShare
-                            MediaType.SELFIE -> Icons.Default.Face
-                        }
+                    // Top primary row: All Images & All Videos
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        PrimaryCategoryPill(
+                            category = MediaType.ALL_IMAGES,
+                            count = categoryCounts[MediaType.ALL_IMAGES] ?: 0,
+                            isSelected = selectedCategory == MediaType.ALL_IMAGES,
+                            onClick = {
+                                onSelectCategory(MediaType.ALL_IMAGES)
+                                onDismissRequest()
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        PrimaryCategoryPill(
+                            category = MediaType.ALL_VIDEOS,
+                            count = categoryCounts[MediaType.ALL_VIDEOS] ?: 0,
+                            isSelected = selectedCategory == MediaType.ALL_VIDEOS,
+                            onClick = {
+                                onSelectCategory(MediaType.ALL_VIDEOS)
+                                onDismissRequest()
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
 
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                    )
+
+                    // 2-column compact subcategories (3 rows x 2 cols)
+                    val subcategoryPairs = listOf(
+                        MediaType.PHOTO to MediaType.VIDEO,
+                        MediaType.LIVE_PHOTO to MediaType.SCREEN_RECORDING,
+                        MediaType.SCREENSHOT to MediaType.SELFIE
+                    )
+
+                    subcategoryPairs.forEach { (catLeft, catRight) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .bounceClick(scaleDown = 0.96f) {
-                                    onSelectCategory(category)
-                                    onDismissRequest()
-                                }
-                                .padding(horizontal = 14.dp, vertical = 9.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(vertical = 2.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Icon(
-                                imageVector = categoryIcon,
-                                contentDescription = null,
-                                tint = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = category.title,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurface,
+                            CategoryGridItem(
+                                category = catLeft,
+                                count = categoryCounts[catLeft] ?: 0,
+                                isSelected = selectedCategory == catLeft,
+                                onClick = {
+                                    onSelectCategory(catLeft)
+                                    onDismissRequest()
+                                },
                                 modifier = Modifier.weight(1f)
                             )
-                            Text(
-                                text = if (category.isVideo) "$count 条" else "$count 张",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = if (isSelected) NeonGreen.copy(alpha = 0.85f) else MaterialTheme.colorScheme.onSurfaceVariant
+                            CategoryGridItem(
+                                category = catRight,
+                                count = categoryCounts[catRight] ?: 0,
+                                isSelected = selectedCategory == catRight,
+                                onClick = {
+                                    onSelectCategory(catRight)
+                                    onDismissRequest()
+                                },
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PrimaryCategoryPill(
+    category: MediaType,
+    count: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val icon = if (category == MediaType.ALL_IMAGES) Icons.Default.PhotoLibrary else Icons.Default.VideoLibrary
+    val bg = if (isSelected) NeonGreen.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+    val borderModifier = if (isSelected) {
+        Modifier.border(1.dp, NeonGreen.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+    } else Modifier
+
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .then(borderModifier)
+            .background(bg)
+            .bounceClick(scaleDown = 0.95f, onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 7.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(
+            text = category.title,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+            color = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurface,
+            maxLines = 1
+        )
+        Spacer(modifier = Modifier.width(3.dp))
+        Text(
+            text = "($count)",
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) NeonGreen.copy(alpha = 0.85f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+        )
+    }
+}
+
+@Composable
+private fun CategoryGridItem(
+    category: MediaType,
+    count: Int,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val icon = when (category) {
+        MediaType.ALL_IMAGES -> Icons.Default.PhotoLibrary
+        MediaType.ALL_VIDEOS -> Icons.Default.VideoLibrary
+        MediaType.PHOTO -> Icons.Default.CameraAlt
+        MediaType.VIDEO -> Icons.Default.Videocam
+        MediaType.LIVE_PHOTO -> Icons.Default.MotionPhotosOn
+        MediaType.SCREENSHOT -> Icons.Default.Smartphone
+        MediaType.SCREEN_RECORDING -> Icons.AutoMirrored.Filled.ScreenShare
+        MediaType.SELFIE -> Icons.Default.Face
+    }
+
+    val bg = if (isSelected) NeonGreen.copy(alpha = 0.15f) else Color.Transparent
+    val borderModifier = if (isSelected) {
+        Modifier.border(1.dp, NeonGreen.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
+    } else Modifier
+
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .then(borderModifier)
+            .background(bg)
+            .bounceClick(scaleDown = 0.95f, onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 7.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = category.title,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) NeonGreen else MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = "$count",
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) NeonGreen.copy(alpha = 0.9f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+        )
     }
 }
